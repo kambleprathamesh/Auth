@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const MONGODB_URL =
   "mongodb+srv://PrathmeshDB:PrathmeshDB@cluster0.scrkvtg.mongodb.net/NewAuth";
 
-exports.DBConnect = () => {
+const DBConnect = () => {
   mongoose
     .connect(MONGODB_URL)
     .then(() => {
@@ -14,3 +14,6 @@ exports.DBConnect = () => {
       console.error("Error is DB Connection", err);
     });
 };
+
+
+module.exports={DBConnect}

@@ -32,7 +32,7 @@ const CourseSchema = new mongoose.Schema({
   },
   desc: {
     type: String,
-    require: tru,
+    require: true,
   },
   price: {
     type: Number,
@@ -46,5 +46,5 @@ const CourseSchema = new mongoose.Schema({
 
 module.exports = {
   User: mongoose.model("User", UserSchema),
-  Course: mongoose.model("course", CourseSchema),
+  Course: mongoose.model("Course", CourseSchema),
 };

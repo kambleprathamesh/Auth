@@ -77,16 +77,19 @@ const Signin = async (req, res) => {
     }
 
     //compare the passord
-    const decodePass = bcrypt.compare(userExit.password, 10);
-    if (!decodePass) {
+    const comparePass = bcrypt.compare(password, userExit.password);
+    if (!comparePass) {
       return res.status(404).json({
         status: false,
         message: "Password Not match",
       });
     }
 
+    const userId = userExit._id;
+    const role = userExit.role;
     const payload = {
-      username,
+      userId,
+      email,
       role,
     };
 
@@ -95,10 +98,10 @@ const Signin = async (req, res) => {
     console.log("JWT TOKEN", jwtToken);
 
     //update the userschemaa for token
-    await User.updateOne(
-      { emai: userExit.email },
+    await User.findOneAndUpdate(
+      { email: userExit.email },
       {
-        $push: { token: jwtToken },
+        $push: { token: jwtToken.toString() },
       },
       {
         new: true,

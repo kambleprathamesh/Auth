@@ -1,5 +1,8 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const Secret = "Prathmesh";
 const Signup = async (req, res) => {
   const { email, password, role } = req.body;
 
@@ -47,4 +50,58 @@ const Signup = async (req, res) => {
   }
 };
 
-module.exports = { Signup };
+const Signin = async (req, res) => {
+  const { email, password } = req.body;
+
+  //check for null
+  if (!email || !password) {
+    return res.status(400).json({
+      status: false,
+      message: "plase fill all details",
+    });
+  }
+
+  try {
+    //check in DB
+    const userExit = await User.findOne({
+      email,
+    });
+
+    if (!userExit) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    //compare the passord
+    const decodePass = bcrypt.compare(userExit.password, 10);
+    if (!decodePass) {
+      return res.status(404).json({
+        status: false,
+        message: "Password Not match",
+      });
+    }
+
+    const payload = {
+      username,
+      role,
+    };
+    // create jwt token
+    const jwtToken = jwt.sign(payload, Secret);
+    console.log("JWT TOKEN", jwtToken);
+
+    res.status(200).json({
+      status: true,
+      message: "Sigin Succefully",
+    });
+  } catch (error) {
+    console.error("Error n in Sigin", error);
+    res.status(500).json({
+      status: false,
+      message: "Internal server Error",
+    });
+  }
+};
+
+module.exports = { Signup, Signin };

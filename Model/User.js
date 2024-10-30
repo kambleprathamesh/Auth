@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -20,6 +19,9 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     require: true,
+  },
+  token: {
+    type: String,
   },
 });
 
@@ -43,7 +45,6 @@ const CourseSchema = new mongoose.Schema({
 });
 
 module.exports = {
-  Admin: mongoose.model("Admin", AdminSchema),
   User: mongoose.model("User", UserSchema),
   Course: mongoose.model("course", CourseSchema),
 };

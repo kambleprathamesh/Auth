@@ -1,8 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
 const Secret = "Prathmesh";
+const { User } = require("../Model/User");
+const { Course } = require("../Model/User");
+
 const Signup = async (req, res) => {
   const { email, password, role } = req.body;
 
@@ -87,12 +89,25 @@ const Signin = async (req, res) => {
       username,
       role,
     };
+
     // create jwt token
     const jwtToken = jwt.sign(payload, Secret);
     console.log("JWT TOKEN", jwtToken);
 
+    //update the userschemaa for token
+    await User.updateOne(
+      { emai: userExit.email },
+      {
+        $push: { token: jwtToken },
+      },
+      {
+        new: true,
+      }
+    );
+
     res.status(200).json({
       status: true,
+      jwtToken,
       message: "Sigin Succefully",
     });
   } catch (error) {
